@@ -54,6 +54,13 @@ class DataFrameWrapper:
     def __getattr__(self, attr):
         # Delegate attribute access to the underlying DataFrame
         return getattr(self._dataframe, attr)
+    
+    def __setattr__(self, name, value):
+        # Raise an exception if trying to add a new attribute not defined as a property
+        if hasattr(self, name):
+            super().__setattr__(name, value)
+        else:
+            raise AttributeError(f"Cannot add new attribute '{name}' to DataFrameWrapper. Define it as a property first.")
 
     def get_features(self, columns):
         # Extract column names if passed as Series
